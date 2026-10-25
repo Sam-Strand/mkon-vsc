@@ -8,12 +8,12 @@
   </array>
   <key>foldingStartMarker</key>
   <string>(?x:
-    ^\s*(?:[\[{]|''')(?=\s*(?:$|#|//|/\*))
+    ^\s*(?:[\[{]|''')(?=\s*(?:$|//|/\*))
     | ^\s*(?:[\[{]|''')\s*$
   )</string>
   <key>foldingStopMarker</key>
   <string>(?x:
-    ^\s*(?:[}\]]|''')(?=\s*(?:$|#|//|/\*))
+    ^\s*(?:[}\]]|''')(?=\s*(?:$|//|/\*))
     | ^\s*(?:[}\]]|''')\s*$
   )</string>
   <key>keyEquivalent</key>
@@ -30,7 +30,7 @@
     <!-- root object without braces -->
     <dict>
         <key>begin</key>
-        <string>(?x)^(?=\s*(?:[^:,\{\}\[\]\s"']+|'[^']*'|"[^"]*")\s*:)</string>
+        <string>(?x)^(?=\s*(?:[^:,\{\}\[\]\s"'][^:,\{\}\[\]\n]*|'[^']*'|"[^"]*")\s*:)</string>
         <key>end</key>
         <string>$</string>
         <key>patterns</key>
@@ -62,7 +62,7 @@
         </dict>
       </dict>
       <key>end</key>
-      <string>(\])(?:\s*((?:[^,\s#/]|/[^/*])+))?</string>
+      <string>(\])(?:\s*((?:[^,\s/]|/[^/*])+))?</string>
       <key>endCaptures</key>
       <dict>
         <key>1</key>
@@ -99,7 +99,7 @@
         </dict>
       </dict>
       <key>end</key>
-      <string>(\])(?:\s*((?:[^,\s\]#/]|/[^/*])+))?</string>
+      <string>(\])(?:\s*((?:[^,\s\]/]|/[^/*])+))?</string>
       <key>endCaptures</key>
       <dict>
         <key>1</key>
@@ -139,7 +139,7 @@
         </dict>
       </dict>
       <key>match</key>
-      <string>\b(true|false|null)(?:[\t ]*(?=,)|[\t ]*(?:(,)[\t ]*)?(?=$|#|/\*|//|\]))</string>
+      <string>\b(true|false|null)(?:[\t ]*(?=,)|[\t ]*(?:(,)[\t ]*)?(?=$|/\*|//|\]))</string>
     </dict>
     <key>arrayContent</key>
     <dict>
@@ -167,7 +167,7 @@
             </dict>
           </dict>
           <key>end</key>
-          <string>(?=[^\s,/#])|(?=/[^/*])</string>
+          <string>(?=[^\s,/])|(?=/[^/*])</string>
           <key>patterns</key>
           <array>
             <dict>
@@ -212,7 +212,7 @@
             </dict>
           </dict>
           <key>end</key>
-          <string>(")(?:\s*((?:[^,\s\]#/]|/[^/*])+))?</string>
+          <string>(")(?:\s*((?:[^,\s\]/]|/[^/*])+))?</string>
           <key>endCaptures</key>
           <dict>
             <key>1</key>
@@ -248,7 +248,7 @@
             </dict>
           </dict>
           <key>end</key>
-          <string>(')(?:\s*((?:[^,\s\]#/]|/[^/*])+))?</string>
+          <string>(')(?:\s*((?:[^,\s\]/]|/[^/*])+))?</string>
           <key>endCaptures</key>
           <dict>
             <key>1</key>
@@ -287,7 +287,7 @@
         </dict>
       </dict>
       <key>end</key>
-      <string>(''')(?:\s*((?:[^,\s\]#/]|/[^/*])+))?</string>
+      <string>(''')(?:\s*((?:[^,\s\]/]|/[^/*])+))?</string>
       <key>endCaptures</key>
       <dict>
         <key>1</key>
@@ -320,7 +320,7 @@
         </dict>
       </dict>
       <key>match</key>
-      <string>(-?(?:0|(?:[1-9]\d*))(?:\.\d+)?(?:[eE][+-]?\d+)?)(?:[\t ]*(?=,)|[\t ]*(?:(,)[\t ]*)?(?=$|#|/\*|//|\]))</string>
+      <string>(-?(?:0|(?:[1-9]\d*))(?:\.\d+)?(?:[eE][+-]?\d+)?)(?:[\t ]*(?=,)|[\t ]*(?:(,)[\t ]*)?(?=$|/\*|//|\]))</string>
     </dict>
     <key>arrayObject</key>
     <dict>
@@ -335,7 +335,7 @@
         </dict>
       </dict>
       <key>end</key>
-      <string>(\}|(?&lt;=\}))(?:\s*((?:[^,\s\]#/]|/[^/*])+))?</string>
+      <string>(\}|(?&lt;=\}))(?:\s*((?:[^,\s\]/]|/[^/*])+))?</string>
       <key>endCaptures</key>
       <dict>
         <key>1</key>
@@ -417,20 +417,6 @@
             </dict>
           </dict>
           <key>match</key>
-          <string>^\s*(#).*(?:\n)?</string>
-          <key>name</key>
-          <string>comment.line.hash</string>
-        </dict>
-        <dict>
-          <key>captures</key>
-          <dict>
-            <key>1</key>
-            <dict>
-              <key>name</key>
-              <string>punctuation.definition.comment.mkon</string>
-            </dict>
-          </dict>
-          <key>match</key>
           <string>^\s*(//).*(?:\n)?</string>
           <key>name</key>
           <string>comment.line.double-slash</string>
@@ -458,20 +444,6 @@
           </dict>
           <key>name</key>
           <string>comment.block.double-slash</string>
-        </dict>
-        <dict>
-          <key>captures</key>
-          <dict>
-            <key>1</key>
-            <dict>
-              <key>name</key>
-              <string>punctuation.definition.comment.mkon</string>
-            </dict>
-          </dict>
-          <key>match</key>
-          <string>(#)[^\n]*</string>
-          <key>name</key>
-          <string>comment.line.hash</string>
         </dict>
         <dict>
           <key>captures</key>
@@ -527,20 +499,6 @@
             </dict>
           </dict>
           <key>match</key>
-          <string>(#).*\n</string>
-          <key>name</key>
-          <string>comment.line.hash</string>
-        </dict>
-        <dict>
-          <key>captures</key>
-          <dict>
-            <key>1</key>
-            <dict>
-              <key>name</key>
-              <string>punctuation.definition.comment.mkon</string>
-            </dict>
-          </dict>
-          <key>match</key>
           <string>(//).*\n</string>
           <key>name</key>
           <string>comment.line.double-slash</string>
@@ -582,7 +540,7 @@
         </dict>
       </dict>
       <key>match</key>
-      <string>\b(true|false|null)[\t ]*(?=$|#|/\*|//|\])</string>
+      <string>\b(true|false|null)[\t ]*(?=$|/\*|//|\])</string>
     </dict>
     <key>jstring</key>
     <dict>
@@ -600,7 +558,7 @@
             </dict>
           </dict>
           <key>end</key>
-          <string>(")(?:\s*((?:[^\s#/]|/[^/*]).*)$)?</string>
+          <string>(")(?:\s*((?:[^\s/]|/[^/*]).*)$)?</string>
           <key>endCaptures</key>
           <dict>
             <key>1</key>
@@ -636,7 +594,7 @@
             </dict>
           </dict>
           <key>end</key>
-          <string>(')(?:\s*((?:[^\s#/]|/[^/*]).*)$)?</string>
+          <string>(')(?:\s*((?:[^\s/]|/[^/*]).*)$)?</string>
           <key>endCaptures</key>
           <dict>
             <key>1</key>
@@ -715,7 +673,7 @@
       <key>begin</key>
       <string>(?x:
         (
-          (?:[^:,\{\}\[\]\s"'][^:,\{\}\[\]\s]*) |
+          (?:[^:,\{\}\[\]\s"'](?:[^:,\{\}\[\]\n]*[^:,\{\}\[\]\s])?) |
           (?: # json string w/ '
             '
             (?:
@@ -783,7 +741,7 @@
         </dict>
       </dict>
       <key>end</key>
-      <string>(?&lt;!^|:)\s*\n|(?=})|(,)</string>
+      <string>(?&lt;!^|:)\s*\n|(?=})|(,)(?=[ \t]*(?:$|[\}\]]|//|/\*|:|"(?:[^"\\\n]|\\.)*"[ \t]*:|'(?:[^'\\\n]|\\.)*'[ \t]*:|'''|[^,:\{\}\[\]\s"'][^,:\{\}\[\]\n]*:))</string>
       <key>endCaptures</key>
       <dict>
         <key>1</key>
@@ -833,7 +791,7 @@
         </dict>
       </dict>
       <key>end</key>
-      <string>(?&lt;!^)\s*(?=\n)|(?=[},])</string>
+      <string>(?&lt;!^)\s*(?=\n)|(?=\})|(?=,[ \t]*(?:$|[\}\]]|//|/\*|:|"(?:[^"\\\n]|\\.)*"[ \t]*:|'(?:[^'\\\n]|\\.)*'[ \t]*:|'''|[^,:\{\}\[\]\s"'][^,:\{\}\[\]\n]*:))</string>
       <key>name</key>
       <string>meta.structure.key-value.mkon</string>
       <key>patterns</key>
@@ -883,7 +841,7 @@
         </dict>
       </dict>
       <key>end</key>
-      <string>(''')(?:\s*((?:[^\s#/]|/[^/*]).*)$)?</string>
+      <string>(''')(?:\s*((?:[^\s/]|/[^/*]).*)$)?</string>
       <key>endCaptures</key>
       <dict>
         <key>1</key>
@@ -911,7 +869,7 @@
         </dict>
       </dict>
       <key>match</key>
-      <string>(-?(?:0|(?:[1-9]\d*))(?:\.\d+)?(?:[eE][+-]?\d+)?)[\t ]*(?=$|#|/\*|//|\])</string>
+      <string>(-?(?:0|(?:[1-9]\d*))(?:\.\d+)?(?:[eE][+-]?\d+)?)[\t ]*(?=$|/\*|//|\])</string>
     </dict>
     <key>object</key>
     <dict>
@@ -926,7 +884,7 @@
         </dict>
       </dict>
       <key>end</key>
-      <string>(\}|(?&lt;=\}))(?:\s*((?:[^,\s#/]|/[^/*])+))?</string>
+      <string>(\}|(?&lt;=\}))(?:\s*((?:[^,\s/]|/[^/*])+))?</string>
       <key>endCaptures</key>
       <dict>
         <key>1</key>
@@ -963,7 +921,7 @@
         </dict>
       </dict>
       <key>end</key>
-      <string>(\])(?:\s*((?:[^,\s}#/]|/[^/*])+))?</string>
+      <string>(\])(?:\s*((?:[^,\s}/]|/[^/*])+))?</string>
       <key>endCaptures</key>
       <dict>
         <key>1</key>
@@ -1003,7 +961,7 @@
         </dict>
       </dict>
       <key>match</key>
-      <string>\b(true|false|null)(?:[\t ]*(?=,)|[\t ]*(?:(,)[\t ]*)?(?=$|#|/\*|//|\}))</string>
+      <string>\b(true|false|null)(?:[\t ]*(?=,[ \t]*(?:$|[\}\]]|//|/\*|:|"(?:[^"\\\n]|\\.)*"[ \t]*:|'(?:[^'\\\n]|\\.)*'[ \t]*:|'''|[^,:\{\}\[\]\s"'][^,:\{\}\[\]\n]*:))|[\t ]*(?:(,)[\t ]*)?(?=$|/\*|//|\}))</string>
     </dict>
     <key>objectContent</key>
     <dict>
@@ -1035,7 +993,7 @@
             </dict>
           </dict>
           <key>end</key>
-          <string>(?=[^\s,/#])|(?=/[^/*])</string>
+          <string>(?=[^\s,/])|(?=/[^/*])</string>
           <key>patterns</key>
           <array>
             <dict>
@@ -1074,7 +1032,7 @@
             </dict>
           </dict>
           <key>end</key>
-          <string>(")(?:\s*((?:[^,\s\}#/]|/[^/*])+))?</string>
+          <string>(")(?:\s*((?:[^,\s\}/]|/[^/*])+))?</string>
           <key>endCaptures</key>
           <dict>
             <key>1</key>
@@ -1110,7 +1068,7 @@
             </dict>
           </dict>
           <key>end</key>
-          <string>(')(?:\s*((?:[^,\s\}#/]|/[^/*])+))?</string>
+          <string>(')(?:\s*((?:[^,\s\}/]|/[^/*])+))?</string>
           <key>endCaptures</key>
           <dict>
             <key>1</key>
@@ -1149,7 +1107,7 @@
         </dict>
       </dict>
       <key>end</key>
-      <string>(''')(?:\s*((?:[^,\s\}#/]|/[^/*])+))?</string>
+      <string>(''')(?:\s*((?:[^,\s\}/]|/[^/*])+))?</string>
       <key>endCaptures</key>
       <dict>
         <key>1</key>
@@ -1182,7 +1140,7 @@
         </dict>
       </dict>
       <key>match</key>
-      <string>(-?(?:0|(?:[1-9]\d*))(?:\.\d+)?(?:[eE][+-]?\d+)?)(?:[\t ]*(?=,)|[\t ]*(?:(,)[\t ]*)?(?=$|#|/\*|//|\}))</string>
+      <string>(-?(?:0|(?:[1-9]\d*))(?:\.\d+)?(?:[eE][+-]?\d+)?)(?:[\t ]*(?=,[ \t]*(?:$|[\}\]]|//|/\*|:|"(?:[^"\\\n]|\\.)*"[ \t]*:|'(?:[^'\\\n]|\\.)*'[ \t]*:|'''|[^,:\{\}\[\]\s"'][^,:\{\}\[\]\n]*:))|[\t ]*(?:(,)[\t ]*)?(?=$|/\*|//|\}))</string>
     </dict>
     <key>objectObject</key>
     <dict>
@@ -1197,7 +1155,7 @@
         </dict>
       </dict>
       <key>end</key>
-      <string>(\}|(?&lt;=\})\}?)(?:\s*((?:[^,\s}#/]|/[^/*])+))?</string>
+      <string>(\}|(?&lt;=\})\}?)(?:\s*((?:[^,\s}/]|/[^/*])+))?</string>
       <key>endCaptures</key>
       <dict>
         <key>1</key>
@@ -1235,7 +1193,7 @@
         </dict>
         <dict>
           <key>include</key>
-          <string>#containerUstring</string>
+          <string>#objectUstring</string>
         </dict>
       </array>
     </dict>
@@ -1301,6 +1259,20 @@
     <dict>
       <key>match</key>
       <string>[^:,\{\[\}\]\s](?:[ \t]*(?:[^,\{\[\}\]\s]|(?&lt;br&gt;[\[\{](?:[^\[\]\{\}\n]|\g&lt;br&gt;)*[\]\}])))*(?:[ \t]*[\[\{].*$)?</string>
+      <key>name</key>
+      <string>string.quoted.none.mkon</string>
+    </dict>
+    <key>objectUstring</key>
+    <!--
+      Quoteless string as an object value: like containerUstring, but a ',' is part of the
+      text unless a key and ':' (or only a comment / the end of the line) follow it:
+        header: ЭК-6. P пара, кг/см2    ->  one string
+        a: x, y, b: 1                   ->  a = "x, y", b = 1
+      Mirrors isPairSeparator() in mkon-js.
+    -->
+    <dict>
+      <key>match</key>
+      <string>[^:,\{\[\}\]\s](?:[ \t]*(?:[^,\{\[\}\]\s]|,(?![ \t]*(?:$|[\}\]]|//|/\*|:|"(?:[^"\\\n]|\\.)*"[ \t]*:|'(?:[^'\\\n]|\\.)*'[ \t]*:|'''|[^,:\{\}\[\]\s"'][^,:\{\}\[\]\n]*:))|(?&lt;br&gt;[\[\{](?:[^\[\]\{\}\n]|\g&lt;br&gt;)*[\]\}])))*(?:[ \t]*[\[\{].*$)?</string>
       <key>name</key>
       <string>string.quoted.none.mkon</string>
     </dict>

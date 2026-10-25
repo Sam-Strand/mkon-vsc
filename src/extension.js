@@ -42,7 +42,7 @@ function addBracketFoldRanges(document, ranges) {
             const ch = line[i]
             const next = line[i + 1]
 
-            if (ch === '#' || (ch === '/' && next === '/')) {
+            if (ch === '/' && next === '/') {
                 break
             }
 
