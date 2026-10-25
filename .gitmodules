@@ -1,0 +1,3 @@
+[submodule "mkon-js"]
+	path = mkon-js
+	url = https://github.com/Sam-Strand/mkon-js.git

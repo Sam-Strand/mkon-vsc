@@ -1,0 +1,12 @@
+services:
+    ext:
+        build: .
+        volumes:
+            - .:/ext
+        working_dir: /ext
+        stdin_open: true
+        tty: true
+
+volumes:
+    node-modules:
+    npm-cache:

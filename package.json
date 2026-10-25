@@ -1,0 +1,156 @@
+{
+    "name": "mkon-vsc",
+    "displayName": "mkon-vsc",
+    "publisher": "Sam-Strand",
+    "description": "format mkon",
+    "version": "1.0.0",
+    "license": "MIT",
+    "engines": {
+        "vscode": "^1.0.0"
+    },
+    "keywords": [
+        "json",
+        "mkon"
+    ],
+    "categories": [
+        "Formatters"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/Sam-Strand/mkon-vsc.git"
+    },
+    "icon": "icons/extension-icon.png",
+    "activationEvents": [
+        "onLanguage:mkon",
+        "onLanguage:mkon"
+    ],
+    "main": "./dist/extension.js",
+    "contributes": {
+        "languages": [
+            {
+                "id": "mkon",
+                "aliases": [
+                    "mkon",
+                    "mkon"
+                ],
+                "extensions": [
+                    ".mkon"
+                ],
+                "configuration": "./language-configuration.json",
+                "icon": {
+                "light": "./icons/file_type_mkon.svg",
+                "dark": "./icons/file_type_mkon.svg"
+                }
+            }
+        ],
+        "configuration": {
+            "title": "mkon Formatter",
+            "properties": {
+                "mkon-vsc.condense": {
+                    "type": "integer",
+                    "default": "0",
+                    "description": "if less than condense,will try to fit objects/arrays onto one line"
+                },
+                "mkon-vsc.bracesSameLine": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "makes braces appear on the same line as the key name"
+                },
+                "mkon-vsc.emitRootBraces": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "show braces for the root object"
+                },
+                "mkon-vsc.quotes": {
+                    "type": "string",
+                    "default": "min",
+                    "enum": [
+                        "min",
+                        "keys",
+                        "strings",
+                        "all"
+                    ],
+                    "enumDescriptions": [
+                        "no quotes whenever possible",
+                        "use quotes around keys",
+                        "use quotes around string values",
+                        "use quotes around keys and string values"
+                    ],
+                    "description": "controls how strings are displayed. (setting separator implies 'strings')"
+                },
+                "mkon-vsc.multiline": {
+                    "type": "string",
+                    "default": "off",
+                    "enum": [
+                        "std",
+                        "no-tabs",
+                        "off"
+                    ],
+                    "enumDescriptions": [
+                        "strings containing \\n are shown in multiline format",
+                        "like std but disallow tabs",
+                        "show in JSON format"
+                    ],
+                    "description": "controls how multiline strings are displayed. (setting quotes implies 'off')"
+                },
+                "mkon-vsc.separator": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "output a comma separator between elements"
+                },
+                "mkon-vsc.space": {
+                    "type": [
+                        "number",
+                        "string"
+                    ],
+                    "default": "auto",
+                    "description": "specifies the indentation of nested structures. If it is a number, it will specify the number of spaces to indent at each level. If it is a string (such as '\t' or ' '), it contains the characters used to indent at each level. if it is 'auto', will use current editor's indents"
+                },
+                "mkon-vsc.eol": {
+                    "type": "string",
+                    "default": "auto",
+                    "description": "specifies the EOL sequence.if it is 'auto', will use current editor's endOfLine"
+                },
+                "mkon-vsc.colors": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "output ascii color codes"
+                },
+                "mkon-vsc.serializeDeterministically": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "when serializing objects into mkon, order the keys based on their UTF-16 code units order"
+                },
+                "mkon-vsc.quoteChar": {
+                    "type": "string",
+                    "default": "\"",
+                    "enum": ["\"", "'"],
+                    "enumDescriptions": [
+                        "use double quotes for quoted keys and strings",
+                        "use single quotes for quoted keys and strings"
+                    ],
+                    "description": "controls which quote character is used when quoting. escaping follows the chosen character"
+                }
+            }
+        },
+        "grammars": [
+            {
+                "language": "mkon",
+                "scopeName": "source.mkon",
+                "path": "./syntaxes/mkon.tmLanguage"
+            }
+        ]
+    },
+    "scripts": {
+        "vscode:prepublish": "pnpm run package",
+        "compile": "vite build",
+        "watch": "vite build --watch",
+        "package": "vite build"
+    },
+    "devDependencies": {
+        "vite": "^8.3.1"
+    },
+    "dependencies": {
+        "mkon": "workspace:*"
+    }
+}
