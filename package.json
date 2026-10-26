@@ -3,7 +3,7 @@
     "displayName": "mkon-vsc",
     "publisher": "Sam-Strand",
     "description": "format mkon",
-    "version": "1.1.2",
+    "version": "1.2.0",
     "license": "MIT",
     "engines": {
         "vscode": "^1.0.0"
