@@ -15,6 +15,7 @@
   <string>(?x:
     ^\s*(?:[}\]]|''')(?=\s*(?:$|//|/\*))
     | ^\s*(?:[}\]]|''')\s*$
+    | ^\s*'''(?=\s*:)
   )</string>
   <key>keyEquivalent</key>
   <string>^~J</string>
@@ -27,14 +28,25 @@
         <string>#comments</string>
     </dict>
 
-    <!-- root object without braces -->
+    <!--
+      root object without braces
+      The second alternative starts a pair whose key is a ''' block. A lone ''' is
+      ambiguous at the root (it may also open a bare multiline string that is the
+      whole document), so the key reading is used unless the line is a complete
+      one-line ''' string with nothing but a comment after it.
+    -->
     <dict>
         <key>begin</key>
-        <string>(?x)^(?=\s*(?:[^:,\{\}\[\]\s"'][^:,\{\}\[\]\n]*|'[^']*'|"[^"]*")\s*:)</string>
+        <string>(?x)^(?=\s*(?:[^:,\{\}\[\]\s"'][^:,\{\}\[\]\n]*|'[^']*'|"[^"]*")\s*:)
+          |^(?=[\t ]*'''(?!(?:[^']|'(?!''))*'''[\t ]*(?:$|//|/\*)))</string>
         <key>end</key>
         <string>$</string>
         <key>patterns</key>
         <array>
+        <dict>
+            <key>include</key>
+            <string>#mkey</string>
+        </dict>
         <dict>
             <key>include</key>
             <string>#key</string>
@@ -828,6 +840,77 @@
         </dict>
       </array>
     </dict>
+    <key>mkey</key>
+    <!--
+      A key written as a ''' block, with its value:
+        '''
+        multiline
+        key
+        ''': value
+      Only valid where a key is expected (an object or the braceless root object);
+      inside an array ''' always opens a string, so #arrayMstring is left alone.
+      Same end condition as #key.
+    -->
+    <dict>
+      <key>begin</key>
+      <string>(?=''')</string>
+      <key>end</key>
+      <string>(?&lt;!^|:)\s*\n|(?=})|(,)(?=[ \t]*(?:$|[\}\]]|//|/\*|:|"(?:[^"\\\n]|\\.)*"[ \t]*:|'(?:[^'\\\n]|\\.)*'[ \t]*:|'''|[^,:\{\}\[\]\s"'][^,:\{\}\[\]\n]*:))</string>
+      <key>endCaptures</key>
+      <dict>
+        <key>1</key>
+        <dict>
+          <key>name</key>
+          <string>punctuation.separator.dictionary.pair.mkon</string>
+        </dict>
+      </dict>
+      <key>patterns</key>
+      <array>
+        <dict>
+          <key>include</key>
+          <string>#mkeyName</string>
+        </dict>
+        <dict>
+          <key>include</key>
+          <string>#commentsNewline</string>
+        </dict>
+        <dict>
+          <key>include</key>
+          <string>#keyValue</string>
+        </dict>
+        <dict>
+          <key>match</key>
+          <string>[^\s]</string>
+          <key>name</key>
+          <string>invalid.illegal.object-property.mkon</string>
+        </dict>
+      </array>
+    </dict>
+    <key>mkeyName</key>
+    <dict>
+      <key>begin</key>
+      <string>'''</string>
+      <key>beginCaptures</key>
+      <dict>
+        <key>0</key>
+        <dict>
+          <key>name</key>
+          <string>punctuation.definition.string.begin.mkon</string>
+        </dict>
+      </dict>
+      <key>end</key>
+      <string>'''</string>
+      <key>endCaptures</key>
+      <dict>
+        <key>0</key>
+        <dict>
+          <key>name</key>
+          <string>punctuation.definition.string.end.mkon</string>
+        </dict>
+      </dict>
+      <key>name</key>
+      <string>support.type.property-name.mkon</string>
+    </dict>
     <key>mstring</key>
     <dict>
       <key>begin</key>
@@ -970,6 +1053,10 @@
         <dict>
           <key>include</key>
           <string>#comments</string>
+        </dict>
+        <dict>
+          <key>include</key>
+          <string>#mkey</string>
         </dict>
         <dict>
           <key>include</key>
