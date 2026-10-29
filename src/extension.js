@@ -155,6 +155,70 @@ function addBlockCommentFoldRanges(document, ranges) {
     }
 }
 
+const diagnostics = vscode.languages.createDiagnosticCollection('mkon')
+const validateTimers = new Map()
+
+// диапазон для подсветки: токен в месте ошибки, а если там пробел или конец файла — фрагмент перед ним
+function errorRange(document, e) {
+    const text = document.getText()
+    const isSpace = c => /\s/.test(c)
+    const isStop = c => isSpace(c) || '{}[],:'.includes(c)
+    let start = Math.min(e.offset, text.length)
+
+    if (start >= text.length || isSpace(text[start])) {
+        let end = start
+        while (end > 0 && isSpace(text[end - 1])) end--
+        if (end === 0) {
+            return new vscode.Range(document.positionAt(0), document.positionAt(Math.min(1, text.length)))
+        }
+        start = end - 1
+        if (!isStop(text[start])) {
+            // весь фрагмент строки до разделителя, а не только последнее слово
+            while (start > 0 && text[start - 1] !== '\n' && !'{}[],:'.includes(text[start - 1])) start--
+            while (isSpace(text[start])) start++
+        }
+        return new vscode.Range(document.positionAt(start), document.positionAt(end))
+    }
+
+    let end = start + 1
+    if (!isStop(text[start])) {
+        while (end < text.length && !isStop(text[end])) end++
+    }
+    return new vscode.Range(document.positionAt(start), document.positionAt(end))
+}
+
+function toDiagnostic(document, e) {
+    const range = typeof e.offset === 'number'
+        ? errorRange(document, e)
+        : document.lineAt(0).range
+    let message = e.reason || e.message
+    if (e.hint) message += '\n' + e.hint
+    const diagnostic = new vscode.Diagnostic(range, message, vscode.DiagnosticSeverity.Error)
+    diagnostic.source = 'mkon'
+    return diagnostic
+}
+
+function validate(document) {
+    if (document.languageId !== 'mkon') return
+    // errors включает режим восстановления: парсер читает дальше и собирает все ошибки
+    const errors = []
+    try {
+        mkon.rt.parse(document.getText(), { errors })
+    } catch (e) {
+        errors.push(e)
+    }
+    diagnostics.set(document.uri, errors.map(e => toDiagnostic(document, e)))
+}
+
+function scheduleValidate(document) {
+    const key = document.uri.toString()
+    clearTimeout(validateTimers.get(key))
+    validateTimers.set(key, setTimeout(() => {
+        validateTimers.delete(key)
+        validate(document)
+    }, 300))
+}
+
 export function activate(context) {
     output.info('activate')
 
@@ -191,10 +255,17 @@ export function activate(context) {
             result.push(new vscode.TextEdit(range, formattedText))
             return result
         } catch (e) {
+            const diagnostic = toDiagnostic(document, e)
+            diagnostics.set(document.uri, [diagnostic])
+            const pos = diagnostic.range.start
             vscode.window.showErrorMessage(
-                'Formatted document failed, please check your syntax'
-            )
-            console.error(e)
+                `mkon: ${e.reason || e.message} (строка ${pos.line + 1}, столбец ${pos.character + 1})`,
+                'Показать'
+            ).then(choice => {
+                if (choice !== 'Показать') return
+                vscode.window.showTextDocument(document, { selection: diagnostic.range })
+            })
+            output.error(e.message)
         }
     }
     context.subscriptions.push(
@@ -204,6 +275,17 @@ export function activate(context) {
             }
         })
     )
+
+    context.subscriptions.push(
+        diagnostics,
+        vscode.workspace.onDidOpenTextDocument(validate),
+        vscode.workspace.onDidChangeTextDocument(event => scheduleValidate(event.document)),
+        vscode.workspace.onDidCloseTextDocument(document => {
+            clearTimeout(validateTimers.get(document.uri.toString()))
+            diagnostics.delete(document.uri)
+        })
+    )
+    vscode.workspace.textDocuments.forEach(validate)
 
     context.subscriptions.push(
         vscode.languages.registerFoldingRangeProvider('mkon', {
